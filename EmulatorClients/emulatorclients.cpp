@@ -1,6 +1,6 @@
 #include "emulatorclients.h"
 
-EmulatorClients::EmulatorClients(QObject *parent)
+EmulatorClients::EmulatorClients(QString address, int port, int countConnection, int period, QObject *parent)
     : QObject{parent}
 {
 
