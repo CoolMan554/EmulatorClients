@@ -21,6 +21,9 @@ int main(int argc, char *argv[])
     QCommandLineOption connectOption(QStringList() << "c" << "connect" , QCoreApplication::translate("main", "Number of connected sessions"));
     QCommandLineOption periodOption(QStringList() << "per" << "period" , QCoreApplication::translate("main", "Message period"));
     parser.addOption(addressOption);
+    parser.addOption(portOption);
+    parser.addOption(connectOption);
+    parser.addOption(periodOption);
 
 
     parser.process(app);
