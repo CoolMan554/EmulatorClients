@@ -34,10 +34,10 @@ int main(int argc, char *argv[])
         return ExitCodes::ExitCode::Error;
     }
 
-    QString address = parser.value(addressOption);
-    int port = parser.value(portOption).toInt();
-    int connection = parser.value(connectOption).toInt();
-    int period = parser.value(periodOption).toInt();
+    const QString address = parser.value(addressOption);
+    const int port = parser.value(portOption).toInt();
+    const int connection = parser.value(connectOption).toInt();
+    const int period = parser.value(periodOption).toInt();
 
     qDebug() << "Address:" << address << "port:" << port << "countConnection:" << connection << "period" << period;
 
