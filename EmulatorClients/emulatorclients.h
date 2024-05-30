@@ -7,12 +7,9 @@ class EmulatorClients : public QObject
 {
     Q_OBJECT
 public:
-    explicit EmulatorClients(QString address, int port, int countConnection, int period, QObject *parent = nullptr);
+    explicit EmulatorClients(const QString address, const int port, const int countConnection, const int period, QObject *parent = nullptr);
+    void createClients(const QString address, const int port, const int countConnection, const int period);
 private:
-    QString m_address;
-    int m_port = 0;
-    int m_countConnection = 0;
-    int m_period = 0;
 
 
 signals:

@@ -1,10 +1,12 @@
 #include "emulatorclients.h"
+#include "clients.h"
 
-EmulatorClients::EmulatorClients(QString address, int port, int countConnection, int period, QObject *parent)
+EmulatorClients::EmulatorClients(const QString address, const int port, const int countConnection, const int period, QObject *parent)
     : QObject{parent}
 {
-    m_address = address;
-    m_port = port;
-    m_countConnection = countConnection;
-    m_period = period;
+    createClients(address, port, countConnection, period);
+}
+
+void EmulatorClients::createClients(const QString address, const int port, const int countConnection, const int period)
+{
 }
