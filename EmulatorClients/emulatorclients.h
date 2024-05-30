@@ -9,10 +9,10 @@ class EmulatorClients : public QObject
 public:
     explicit EmulatorClients(QString address, int port, int countConnection, int period, QObject *parent = nullptr);
 private:
-    QString m_address = "127.0.0.1";
-    int m_port;
-    int m_countConnection = 100;
-    int m_period = 1;
+    QString m_address;
+    int m_port = 0;
+    int m_countConnection = 0;
+    int m_period = 0;
 
 
 signals:

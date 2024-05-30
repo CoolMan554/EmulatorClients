@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QCommandLineOption>
 #include <QSharedPointer>
 #include <QDebug>
 #include "exitcodes.h"
@@ -11,20 +12,19 @@ int main(int argc, char *argv[])
 
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("emulatorclients-test");
-    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setApplicationVersion(QT_VERSION_STR);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("TestEmulator");
+    parser.setApplicationDescription(QCoreApplication::translate("main", "TestEmulator"));
     parser.addHelpOption(); parser.addVersionOption();
-    QCommandLineOption addressOption(QStringList() << "a" << "address" , QCoreApplication::translate("main", "Entering the address of the target server (Example: 127.0.0.1)"));
-    QCommandLineOption portOption(QStringList() << "p" << "port" , QCoreApplication::translate("main", "Entering the port of the target server (Example: 7001)"));
-    QCommandLineOption connectOption(QStringList() << "c" << "connect" , QCoreApplication::translate("main", "Number of connected sessions"));
-    QCommandLineOption periodOption(QStringList() << "per" << "period" , QCoreApplication::translate("main", "Message period"));
+    QCommandLineOption addressOption(QStringList() << "a" << "address" , QCoreApplication::translate("main", "Entering the address of the target server (Example: 127.0.0.1)"), "address", "127.0.0.1");
+    QCommandLineOption portOption(QStringList() << "p" << "port" , QCoreApplication::translate("main", "Entering the port of the target server (Example: 7001)"), "port");
+    QCommandLineOption connectOption(QStringList() << "c" << "connect" , QCoreApplication::translate("main", "Number of connected sessions"), "connect", "100");
+    QCommandLineOption periodOption(QStringList() << "per" << "period" , QCoreApplication::translate("main", "Message period"), "period", "1");
     parser.addOption(addressOption);
     parser.addOption(portOption);
     parser.addOption(connectOption);
     parser.addOption(periodOption);
-
 
     parser.process(app);
 
@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
     int port = parser.value(portOption).toInt();
     int connection = parser.value(connectOption).toInt();
     int period = parser.value(periodOption).toInt();
+
+    qDebug() << "Address:" << address << "port:" << port << "countConnection:" << connection << "period" << period;
 
     int exitCode =  ExitCodes::ExitCode::Restart;
     int       exceptionCount = 1;
