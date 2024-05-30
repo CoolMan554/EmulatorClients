@@ -21,5 +21,7 @@ add_executable(EmulatorClients
   emulatorclients.h
   emulatorclients.cpp
   exitcodes.h
+  threadcollections.cpp
+  threadcollections.h
 )
 target_link_libraries(EmulatorClients Qt${QT_VERSION_MAJOR}::Core)
