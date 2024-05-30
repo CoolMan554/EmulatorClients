@@ -7,7 +7,6 @@
 
 class ThreadCollections
 {
-
     void createThread();
     QList<QThread*> currentThreads{};
     int pos = 0;///<Текущая позиция потока
