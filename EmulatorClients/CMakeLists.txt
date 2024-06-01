@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 
 add_executable(EmulatorClients
   main.cpp
@@ -25,3 +25,4 @@ add_executable(EmulatorClients
   threadcollections.h
 )
 target_link_libraries(EmulatorClients Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(EmulatorClients Qt${QT_VERSION_MAJOR}::Network)
