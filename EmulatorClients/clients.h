@@ -11,7 +11,7 @@
 class Clients : public QObject
 {
     Q_OBJECT
-public:
+public:   
     explicit Clients(const QString address, const int port, double period, QThread* curThread, QObject *parent = nullptr);
     ~Clients();
     bool checkIsConnect();

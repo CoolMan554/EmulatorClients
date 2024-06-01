@@ -21,7 +21,7 @@ Clients::~Clients()
 
 bool Clients::checkIsConnect()
 {
-    return false;
+    return tcpSocket->state() == QTcpSocket::ConnectedState;
 }
 
 void Clients::connectToServer()
@@ -58,8 +58,7 @@ void Clients::sendMessage()
         Data.clear();
         QDataStream out(&Data, QIODevice::WriteOnly);
         out.setVersion(QDataStream::Qt_5_15);
-        QByteArray message(16 * 1024, 0);//16 кб верхний лимит
-        QRandomGenerator::global()->fillRange(reinterpret_cast<quint32 *>(message.data()), message.size());//Рандомное сообщение
+        QByteArray message = "Сообщение отправлено серверу";
         out << quint16(0) << messageId++ << message;//Первые 2 байта резервируется для размера блока
         out.device()->seek(0);
         out << quint16(Data.size() - sizeof(quint16));//Запись размера блока
@@ -84,14 +83,15 @@ void Clients::readMessage()
             }
             if(tcpSocket->bytesAvailable() < nextBlockSize)//Данные пришли не полностью
                 break;
-            QByteArray message;
+            QString message;
             in >> message;
+            nextBlockSize = 0;
             qDebug() << "Clients::readMessage:" << message;
         }
     }
     else
     {
-        qDebug() << "Client Read Error";
+        qDebug() << "Clients::readMessage:: Read Error QDataStream";
     }
 }
 
