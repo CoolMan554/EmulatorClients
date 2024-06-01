@@ -12,7 +12,7 @@ class EmulatorClients : public QObject
 public:
     explicit EmulatorClients(const QString address, const int port, const int countConnection, const int period, QObject *parent = nullptr);
     ~EmulatorClients();
-    void createClients(const QString address, const int port, const int countConnection, const int period);
+    void createClients(const QString address, const int port, const int countConnection, const double period);
 private:
     quint32 countConnected = 0;///<Общее количество подключений
     quint32 countDisconnected = 0;///<Общее количество отключений

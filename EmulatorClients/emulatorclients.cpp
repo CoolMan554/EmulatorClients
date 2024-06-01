@@ -19,11 +19,11 @@ EmulatorClients::~EmulatorClients()
     delete currentTime;
 }
 
-void EmulatorClients::createClients(const QString address, const int port, const int countConnection, const int period)
+void EmulatorClients::createClients(const QString address, const int port, const int countConnection, const double period)
 {
     for(int i = 0; i < countConnection; ++i)
     {
-        Clients *client = new Clients(address, port, threads.getThread());
+        Clients *client = new Clients(address, port, period, threads.getThread());
         curClients.append(client);
     }
 }

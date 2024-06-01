@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     const QString address = parser.value(addressOption);
     const int port = parser.value(portOption).toInt();
     const int connection = parser.value(connectOption).toInt();
-    const int period = parser.value(periodOption).toInt();
+    const double period = parser.value(periodOption).toInt();
 
     qDebug() << "Address:" << address << "port:" << port << "countConnection:" << connection << "period" << period;
 
