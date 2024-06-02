@@ -23,15 +23,17 @@ private:
     int c_port = 0;
     double c_period = 0;
     QTcpSocket *tcpSocket{};
-    NetworkProtocol *networkProtocol{};
-    QTimer *curTimer{};
-    QTimer *reconnectTimer{};
+    NetworkProtocol *networkProtocol{};///<Протокол предназначен для формирования сообщения
+    QTimer *curTimer{};///<Таймер для отправки сообщения серверу
+    QTimer *reconnectTimer{};///<Таймер для повторно подключения к серверу
     quint32 messageId{0};///<Уникальный id для каждого потока
     QByteArray Data;///Для отправки сообщение серверу    
     const int timeoutServer = 2;///<Таймаут сервера
     const int reconnectToServer = 2;///<Повторное подключение к серверу
+    const quint16 highSize{16384};///<Максимальный размер массива для отправки серверу
 
     void generateRandomData(QByteArray &data, int size);
+    void generateRandomString(QString &str, int size);
 
 private slots:
     void Init();

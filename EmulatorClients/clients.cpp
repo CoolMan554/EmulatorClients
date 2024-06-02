@@ -46,8 +46,26 @@ bool Clients::checkIsConnect()
 
 void Clients::generateRandomData(QByteArray &data, int size)
 {
+    data.clear();
     data.resize(size);
     QRandomGenerator::global()->fillRange(reinterpret_cast<quint32*>(data.data()), size / sizeof(quint32));
+}
+
+void Clients::generateRandomString(QString &str, int size)
+{
+    const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                               "abcdefghijklmnopqrstuvwxyz"
+                               "0123456789";
+    int charsetSize = sizeof(charset) - 1;
+    size = QRandomGenerator::global()->bounded(size);//Выбираем рандомный размер сообщения
+    str.clear();
+    str.reserve(size);
+
+    for(int i = 0; i < size; i++)
+    {
+        int index = QRandomGenerator::global()->bounded(charsetSize);//Выбираем рандомный символ для сообщения
+        str.append(charset[index]);
+    }
 }
 
 void Clients::connectToServer()
@@ -98,7 +116,10 @@ void Clients::sendMessage()
             QDataStream out(&Data, QIODevice::WriteOnly);
             // Сгенерировать случайные данные
             QByteArray messageData;
-            generateRandomData(messageData, 16384);
+            messageData.clear();
+            QString messageStr;
+            generateRandomString(messageStr, highSize / 2);
+            messageData = messageStr.toUtf8();
             tcpSocket->write(networkProtocol->prepareMessage(messageData, messageId++));
             tcpSocket->flush();
         }
