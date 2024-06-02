@@ -16,9 +16,9 @@ QByteArray NetworkProtocol::prepareMessage(const QByteArray &data, const quint32
     bufferData.clear();
     QDataStream out(&bufferData, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Version::Qt_5_15);
-    out << quint16(0) << messageId << data;
+    out << quint16(0) << messageId << data;//Первые два байта резервируются для размера блока данных
     out.device()->seek(0);
-    out << quint16(bufferData.size() - sizeof(quint16));
+    out << quint16(bufferData.size() - sizeof(quint16));//Формирование размера блока данных
     return bufferData;
 }
 

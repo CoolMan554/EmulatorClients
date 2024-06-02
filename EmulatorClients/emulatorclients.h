@@ -14,9 +14,9 @@ public:
     ~EmulatorClients();
     void createClients(const QString address, const int port, const int countConnection, const double period);
 private:
-    ThreadCollections threads;
-    QList<Clients*> curClients;
-    QTimer *currentTime;
+    ThreadCollections threads;///<Потокобезопасная коллекция с потоками
+    QList<Clients*> curClients;///<Текущие клиенты
+    QTimer *currentTime;///<Таймер для вывода логов эмулятора клиентов
 
 signals:
 
