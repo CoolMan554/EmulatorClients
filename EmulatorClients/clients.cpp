@@ -22,11 +22,13 @@ Clients::~Clients()
     }
     if(curTimer)
     {
+        curTimer->stop();
         delete curTimer;
         curTimer = nullptr;
     }
     if(reconnectTimer)
     {
+        reconnectTimer->stop();
         delete reconnectTimer;
         reconnectTimer = nullptr;
     }
