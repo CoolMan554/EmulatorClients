@@ -102,6 +102,7 @@ void Clients::readMessage()
 {
     QDataStream in(tcpSocket);
     in.setVersion(QDataStream::Qt_5_15);
+    quint16 nextBlockSize{0};///<Размер блока данных от сервера
     if(in.status() == QDataStream::Ok)
     {
         for(;;)
@@ -114,10 +115,9 @@ void Clients::readMessage()
             }
             if(tcpSocket->bytesAvailable() < nextBlockSize)//Данные пришли не полностью
                 break;
-            QString message;
+            QByteArray message;
             in >> message;
-            nextBlockSize = 0;
-            qDebug() << this->thread()->objectName() << "Clients::readMessage:" << message;
+            qDebug() << this->thread()->objectName() << "Clients::readMessage:" << QString::fromUtf8(message);
         }
     }
     else

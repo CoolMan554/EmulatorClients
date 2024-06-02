@@ -24,10 +24,9 @@ private:
     QTcpSocket *tcpSocket{};
     QTimer *curTimer{};
     QTimer *reconnectTimer{};
-    quint16 nextBlockSize{0};///<Размер блока данных от сервера
     quint32 messageId{0};///<Уникальный id для каждого потока
     QByteArray Data;///Для отправки сообщение серверу    
-    const int timeoutServer = 2;///<Таймауит сервера
+    const int timeoutServer = 2;///<Таймаут сервера
     const int reconnectToServer = 2;///<Повторное подключение к серверу
 
     void generateRandomData(QByteArray &data, int size);

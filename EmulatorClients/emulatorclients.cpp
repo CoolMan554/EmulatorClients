@@ -7,7 +7,7 @@ EmulatorClients::EmulatorClients(const QString address, const int port, const in
     createClients(address, port, countConnection, period);
     currentTime = new QTimer{};
     currentTime->setSingleShot(false);
-    currentTime->setInterval(10 * 1000);///@todo: Период всегда 10 секунд?
+    currentTime->setInterval(10 * 1000);
     connect(currentTime, &QTimer::timeout, this, &EmulatorClients::logStatus);
     currentTime->start();
 }
