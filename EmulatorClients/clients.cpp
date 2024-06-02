@@ -11,7 +11,7 @@ Clients::Clients(const QString address, const int port, double period, QThread *
     {
         QChar tempChar = curThread->objectName().at(curThread->objectName().size() - 1);
         bool ok;
-        messageId = QString(tempChar).toUInt(&ok, 16) * 1000;//Получаем уникальный id для каждого сообщения из имени потока
+        messageId = QString(tempChar).toUInt(&ok, 16) * 10000;//Получаем уникальный id для каждого сообщения из имени потока
     }
     QMetaObject::invokeMethod(this, &Clients::Init, Qt::QueuedConnection);
 }
@@ -42,8 +42,15 @@ bool Clients::checkIsConnect()
     return tcpSocket->state() == QTcpSocket::ConnectedState;
 }
 
+void Clients::generateRandomData(QByteArray &data, int size)
+{
+    data.resize(size);
+    QRandomGenerator::global()->fillRange(reinterpret_cast<quint32*>(data.data()), size / sizeof(quint32));
+}
+
 void Clients::connectToServer()
 {
+    qDebug() << tcpSocket->state();
     if(tcpSocket->state() != QAbstractSocket::ConnectedState)
     {
         tcpSocket->connectToHost(c_address, c_port);
@@ -85,9 +92,11 @@ void Clients::sendMessage()
     {
         Data.clear();
         QDataStream out(&Data, QIODevice::WriteOnly);
+        // Сгенерировать случайные данные
+        QByteArray messageData;
+        generateRandomData(messageData, 16384);
         out.setVersion(QDataStream::Qt_5_15);
-        QByteArray message = "Сообщение отправлено серверу";
-        out << quint16(0) << messageId++ << message;//Первые 2 байта резервируется для размера блока
+        out << quint16(0) << messageId++ << messageData;//Первые 2 байта резервируется для размера блока
         out.device()->seek(0);
         out << quint16(Data.size() - sizeof(quint16));//Запись размера блока
         tcpSocket->write(Data);
@@ -126,6 +135,6 @@ void Clients::readMessage()
 void Clients::reconnecting()
 {
     totalNumberDisconnected++;
-    qDebug() << this->thread()->objectName() << "Clients::connectToServer::Повторное подключение к серверу через " << reconnectToServer << "сек";
+    qDebug() << this->thread()->objectName() << "Clients::connectToServer::Повторное подключение к серверу через" << reconnectToServer << "сек";
     reconnectTimer->start(reconnectToServer * 1000);
 }
