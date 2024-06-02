@@ -7,7 +7,7 @@ Clients::Clients(const QString address, const int port, double period, QThread *
     : c_address{address}, c_port{port}, c_period{period},  QObject{parent}
 {
     moveToThread(curThread);
-    this->messageId = ((quint32)messageId - 1) * 1000;//Получаем уникальный id для каждого сообщения из имени потока
+    this->messageId = (quint32)messageId * 1000;//Получаем уникальный id для каждого сообщения из имени потока
     QMetaObject::invokeMethod(this, &Clients::Init, Qt::QueuedConnection);
 }
 

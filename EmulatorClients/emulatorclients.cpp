@@ -16,6 +16,7 @@ EmulatorClients::~EmulatorClients()
 {
     foreach(auto curClient, curClients)
         curClient->deleteLater();
+    currentTime->stop();
     delete currentTime;
 }
 
@@ -23,8 +24,16 @@ void EmulatorClients::createClients(const QString address, const int port, const
 {
     for(int i = 0; i < countConnection; ++i)
     {
-        Clients *client = new Clients(address, port, period, threads.getThread(), threads.getThreadPosition());
-        curClients.append(client);
+        if(threads.getThread())
+        {
+            Clients *client = new Clients(address, port, period, threads.getCurrentThread(), threads.getThreadPosition());
+            curClients.append(client);
+        }
+        else
+        {
+            qDebug() << "EmulatorClients::createClients::Лимит создание потоков превышен";
+            break;
+        }
     }
 }
 

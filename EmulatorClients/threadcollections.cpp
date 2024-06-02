@@ -17,22 +17,23 @@ ThreadCollections::~ThreadCollections()
 }
 
 QThread *ThreadCollections::getThread()
-{
-    if(pos >= limit)
-        pos = 0;
-    if(pos >= currentThreads.count())
+{    
+    if(pos < limit)///<В пределах указанного лимита
+    {
         createThread();
-    return currentThreads[pos++];
+        return currentThreads[pos++];
+    }
+    return nullptr;
 }
 
 QThread *ThreadCollections::getCurrentThread() const
 {
-    return currentThreads[pos];
+    return currentThreads[pos - 1];
 }
 
 int ThreadCollections::getThreadPosition() const
 {
-    return pos;
+    return pos - 1;
 }
 
 void ThreadCollections::createThread()
