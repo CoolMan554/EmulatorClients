@@ -1,5 +1,8 @@
 #include "clients.h"
 
+quint32 Clients::totalNumberConnected{0};
+quint32 Clients::totalNumberDisconnected{0};
+
 Clients::Clients(const QString address, const int port, double period, QThread *curThread, QObject *parent)
     : c_address{address}, c_port{port}, c_period{period}, QObject{parent}
 {
@@ -15,8 +18,23 @@ Clients::Clients(const QString address, const int port, double period, QThread *
 
 Clients::~Clients()
 {
-    delete tcpSocket;
-    delete curTimer;
+    if(tcpSocket)
+    {
+        tcpSocket->abort();
+        tcpSocket->close();
+        delete tcpSocket;
+        tcpSocket = nullptr;
+    }
+    if(curTimer)
+    {
+        delete curTimer;
+        curTimer = nullptr;
+    }
+    if(reconnectTimer)
+    {
+        delete reconnectTimer;
+        reconnectTimer = nullptr;
+    }
 }
 
 bool Clients::checkIsConnect()
@@ -26,27 +44,37 @@ bool Clients::checkIsConnect()
 
 void Clients::connectToServer()
 {
-    tcpSocket->connectToHost(c_address, c_port);
-    if(tcpSocket->waitForConnected(2000))
+    if(tcpSocket->state() != QAbstractSocket::ConnectedState)
     {
-        qDebug() << "Connected to Server" << c_address << c_port;
-    }
-    else
-    {
-        emit Disconnect();
+        tcpSocket->connectToHost(c_address, c_port);
+        if(tcpSocket->waitForConnected(timeoutServer * 1000))
+        {
+            totalNumberConnected++;
+            qDebug() << "Connected to Server" << c_address << c_port;
+        }
+        else
+        {
+            qDebug() << this->objectName() << "Clients::connectToServer::Unconnected to Server. Address:" << c_address << "Port:" << c_port;
+            tcpSocket->disconnectFromHost();
+            qDebug() << this->objectName() << "Clients::connectToServer::Повторное подключение к серверу через" << reconnectToServer << "сек";
+            reconnectTimer->start(reconnectToServer * 1000);
+        }
     }
 }
 
 void Clients::Init()
 {
     tcpSocket = new QTcpSocket(this);
+    reconnectTimer = new QTimer();
+    reconnectTimer->setSingleShot(true);
+    connect(reconnectTimer, &QTimer::timeout, this, &Clients::connectToServer);
     connectToServer();
     curTimer = new QTimer();
     curTimer->setSingleShot(false);
     c_period = c_period * 1000 * (0.8 + QRandomGenerator::global()->generateDouble() * 0.4);//Отклонение +- 20%
     curTimer->setInterval(c_period);
     connect(tcpSocket, &QTcpSocket::readyRead, this, &Clients::readMessage);
-    connect(this, &Clients::Disconnect, this, &Clients::HandleDisconnect);
+    connect(tcpSocket, &QTcpSocket::disconnected, this, &Clients::reconnecting, Qt::DirectConnection);
     connect(curTimer, &QTimer::timeout, this, &Clients::sendMessage);
     curTimer->start();
 }
@@ -86,17 +114,18 @@ void Clients::readMessage()
             QString message;
             in >> message;
             nextBlockSize = 0;
-            qDebug() << "Clients::readMessage:" << message;
+            qDebug() << this->objectName() << "Clients::readMessage:" << message;
         }
     }
     else
     {
-        qDebug() << "Clients::readMessage:: Read Error QDataStream";
+        qDebug() << this->objectName() << "Clients::readMessage:: Read Error QDataStream";
     }
 }
 
-void Clients::HandleDisconnect()
+void Clients::reconnecting()
 {
-    tcpSocket->abort();
-    tcpSocket->close();
+    totalNumberDisconnected++;
+    qDebug() << this->objectName() << "Clients::connectToServer::Повторное подключение к серверу через " << reconnectToServer << "сек";
+    reconnectTimer->start(reconnectToServer * 1000);
 }
