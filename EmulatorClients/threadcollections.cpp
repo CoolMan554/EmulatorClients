@@ -30,6 +30,11 @@ QThread *ThreadCollections::getCurrentThread() const
     return currentThreads[pos];
 }
 
+int ThreadCollections::getThreadPosition() const
+{
+    return pos;
+}
+
 void ThreadCollections::createThread()
 {
     QThread *t = new QThread();

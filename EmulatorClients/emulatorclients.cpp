@@ -23,7 +23,7 @@ void EmulatorClients::createClients(const QString address, const int port, const
 {
     for(int i = 0; i < countConnection; ++i)
     {
-        Clients *client = new Clients(address, port, period, threads.getThread());
+        Clients *client = new Clients(address, port, period, threads.getThread(), threads.getThreadPosition());
         curClients.append(client);
     }
 }

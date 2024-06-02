@@ -3,16 +3,11 @@
 quint32 Clients::totalNumberConnected{0};
 quint32 Clients::totalNumberDisconnected{0};
 
-Clients::Clients(const QString address, const int port, double period, QThread *curThread, QObject *parent)
-    : c_address{address}, c_port{port}, c_period{period}, QObject{parent}
+Clients::Clients(const QString address, const int port, double period, QThread *curThread, int messageId, QObject *parent)
+    : c_address{address}, c_port{port}, c_period{period},  QObject{parent}
 {
     moveToThread(curThread);
-    if(curThread->objectName().size())
-    {
-        QChar tempChar = curThread->objectName().at(curThread->objectName().size() - 1);
-        bool ok;
-        messageId = QString(tempChar).toUInt(&ok, 16) * 10000;//Получаем уникальный id для каждого сообщения из имени потока
-    }
+    this->messageId = ((quint32)messageId - 1) * 1000;//Получаем уникальный id для каждого сообщения из имени потока
     QMetaObject::invokeMethod(this, &Clients::Init, Qt::QueuedConnection);
 }
 
@@ -50,7 +45,6 @@ void Clients::generateRandomData(QByteArray &data, int size)
 
 void Clients::connectToServer()
 {
-    qDebug() << tcpSocket->state();
     if(tcpSocket->state() != QAbstractSocket::ConnectedState)
     {
         tcpSocket->connectToHost(c_address, c_port);

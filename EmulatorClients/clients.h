@@ -12,9 +12,9 @@ class Clients : public QObject
 {
     Q_OBJECT
 public:
-    static quint32 totalNumberConnected;
-    static quint32 totalNumberDisconnected;
-    explicit Clients(const QString address, const int port, double period, QThread* curThread, QObject *parent = nullptr);
+    static quint32 totalNumberConnected;///<Общее количество подключений
+    static quint32 totalNumberDisconnected;///<Общее количество отключений
+    explicit Clients(const QString address, const int port, double period, QThread* curThread, int messageId, QObject *parent = nullptr);
     ~Clients();
     bool checkIsConnect();
 private:

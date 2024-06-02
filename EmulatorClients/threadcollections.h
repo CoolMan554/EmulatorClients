@@ -11,12 +11,13 @@ class ThreadCollections
     QList<QThread*> currentThreads{};
     int pos = 0;///<Текущая позиция потока
     int limit = 0;///<Максимальное количество подключений
-    QString objectName;
+    QString objectName;///<Текущее имя потока
 public:
     explicit ThreadCollections(int curLimit = MAX_THREADS_LIMIT, QString objectName = "Unknown");
     ~ThreadCollections();
     QThread* getThread();
     QThread* getCurrentThread() const;
+    int getThreadPosition() const;
 
 };
 
