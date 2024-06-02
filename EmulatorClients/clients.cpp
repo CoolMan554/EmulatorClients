@@ -20,6 +20,11 @@ Clients::~Clients()
         delete tcpSocket;
         tcpSocket = nullptr;
     }
+    if(networkProtocol)
+    {
+        delete networkProtocol;
+        networkProtocol = nullptr;
+    }
     if(curTimer)
     {
         curTimer->stop();
@@ -68,6 +73,7 @@ void Clients::connectToServer()
 void Clients::Init()
 {
     tcpSocket = new QTcpSocket(this);
+    networkProtocol = new NetworkProtocol;
     reconnectTimer = new QTimer();
     reconnectTimer->setSingleShot(true);
     connect(reconnectTimer, &QTimer::timeout, this, &Clients::connectToServer);
@@ -84,47 +90,36 @@ void Clients::Init()
 
 void Clients::sendMessage()
 {
-    if(tcpSocket->state() == QAbstractSocket::ConnectedState)//Учитываем, что сокет установил соединение
+    if(networkProtocol)
     {
-        Data.clear();
-        QDataStream out(&Data, QIODevice::WriteOnly);
-        // Сгенерировать случайные данные
-        QByteArray messageData;
-        generateRandomData(messageData, 16384);
-        out.setVersion(QDataStream::Qt_5_15);
-        out << quint16(0) << messageId++ << messageData;//Первые 2 байта резервируется для размера блока
-        out.device()->seek(0);
-        out << quint16(Data.size() - sizeof(quint16));//Запись размера блока
-        tcpSocket->write(Data);
-        tcpSocket->flush();
+        if(tcpSocket->state() == QAbstractSocket::ConnectedState)//Учитываем, что сокет установил соединение
+        {
+            Data.clear();
+            QDataStream out(&Data, QIODevice::WriteOnly);
+            // Сгенерировать случайные данные
+            QByteArray messageData;
+            generateRandomData(messageData, 16384);
+            tcpSocket->write(networkProtocol->prepareMessage(messageData, messageId++));
+            tcpSocket->flush();
+        }
     }
+    else qDebug() << this->thread()->objectName() << "Clients::readMessage:: networkProtocol is not valid";
 }
 
 void Clients::readMessage()
 {
-    QDataStream in(tcpSocket);
-    in.setVersion(QDataStream::Qt_5_15);
-    quint16 nextBlockSize{0};///<Размер блока данных от сервера
-    if(in.status() == QDataStream::Ok)
+    if(networkProtocol)
     {
-        for(;;)
+        QByteArray message = networkProtocol->processMessage(tcpSocket);
+        if(message.size())
         {
-            if(nextBlockSize == 0)
-            {
-                if(tcpSocket->bytesAvailable() < 2)//Данные не могут быть меньше 2 байт
-                    break;
-                in >> nextBlockSize;//Размер блока
-            }
-            if(tcpSocket->bytesAvailable() < nextBlockSize)//Данные пришли не полностью
-                break;
-            QByteArray message;
-            in >> message;
             qDebug() << this->thread()->objectName() << "Clients::readMessage:" << QString::fromUtf8(message);
         }
+        else qDebug() << this->thread()->objectName() << "Clients::readMessage:: Read Error QDataStream";
     }
     else
     {
-        qDebug() << this->thread()->objectName() << "Clients::readMessage:: Read Error QDataStream";
+        qDebug() << this->thread()->objectName() << "Clients::readMessage:: networkProtocol is not valid";
     }
 }
 

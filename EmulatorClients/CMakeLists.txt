@@ -23,6 +23,12 @@ add_executable(EmulatorClients
   exitcodes.h
   threadcollections.cpp
   threadcollections.h
+  configcommandline.cpp
+  configcommandline.h
+  abstractprotocol.cpp
+  abstractprotocol.h
+  networkprotocol.cpp
+  networkprotocol.h
 )
 target_link_libraries(EmulatorClients Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(EmulatorClients Qt${QT_VERSION_MAJOR}::Network)

@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QRandomGenerator>
+#include "networkprotocol.h"
 
 class Clients : public QObject
 {
@@ -22,6 +23,7 @@ private:
     int c_port = 0;
     double c_period = 0;
     QTcpSocket *tcpSocket{};
+    NetworkProtocol *networkProtocol{};
     QTimer *curTimer{};
     QTimer *reconnectTimer{};
     quint32 messageId{0};///<Уникальный id для каждого потока
