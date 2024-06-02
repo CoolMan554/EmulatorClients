@@ -54,9 +54,9 @@ void Clients::connectToServer()
         }
         else
         {
-            qDebug() << this->objectName() << "Clients::connectToServer::Unconnected to Server. Address:" << c_address << "Port:" << c_port;
+            qDebug() << this->thread()->objectName() << "Clients::connectToServer::Unconnected to Server. Address:" << c_address << "Port:" << c_port;
             tcpSocket->disconnectFromHost();
-            qDebug() << this->objectName() << "Clients::connectToServer::Повторное подключение к серверу через" << reconnectToServer << "сек";
+            qDebug() << this->thread()->objectName() << "Clients::connectToServer::Повторное подключение к серверу через" << reconnectToServer << "сек";
             reconnectTimer->start(reconnectToServer * 1000);
         }
     }
@@ -114,18 +114,18 @@ void Clients::readMessage()
             QString message;
             in >> message;
             nextBlockSize = 0;
-            qDebug() << this->objectName() << "Clients::readMessage:" << message;
+            qDebug() << this->thread()->objectName() << "Clients::readMessage:" << message;
         }
     }
     else
     {
-        qDebug() << this->objectName() << "Clients::readMessage:: Read Error QDataStream";
+        qDebug() << this->thread()->objectName() << "Clients::readMessage:: Read Error QDataStream";
     }
 }
 
 void Clients::reconnecting()
 {
     totalNumberDisconnected++;
-    qDebug() << this->objectName() << "Clients::connectToServer::Повторное подключение к серверу через " << reconnectToServer << "сек";
+    qDebug() << this->thread()->objectName() << "Clients::connectToServer::Повторное подключение к серверу через " << reconnectToServer << "сек";
     reconnectTimer->start(reconnectToServer * 1000);
 }
