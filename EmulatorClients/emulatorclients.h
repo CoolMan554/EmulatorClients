@@ -14,8 +14,6 @@ public:
     ~EmulatorClients();
     void createClients(const QString address, const int port, const int countConnection, const double period);
 private:
-    quint32 countConnected = 0;///<Общее количество подключений
-    quint32 countDisconnected = 0;///<Общее количество отключений
     ThreadCollections threads;
     QList<Clients*> curClients;
     QTimer *currentTime;

@@ -31,18 +31,20 @@ void EmulatorClients::createClients(const QString address, const int port, const
 void EmulatorClients::logStatus()
 {
     quint32 currentCountConnected = 0;//Текущее количество подключений
+    quint32 totalCountConnected = 0;//Общее количество подключений
+    quint32 totalCountDisconnected = 0;//Общее количество отключений
 
     for(const auto &curClient : curClients)
     {
         if(curClient)
         {
+            totalCountConnected = curClient->totalNumberConnected;
+            totalCountDisconnected = curClient->totalNumberDisconnected;
             if(curClient->checkIsConnect())
             {
                 currentCountConnected++;
             }
-            else countDisconnected++;
         }
     }
-    countConnected += currentCountConnected;
-    qDebug() << "Текущее количество подключений:" << currentCountConnected << "Общее количество подключений:" << countConnected << "Отключений:" << countDisconnected;
+    qDebug() << "Текущее количество подключений:" << currentCountConnected << "Общее количество подключений:" << totalCountConnected << "Общее количество отключений:" << totalCountDisconnected;
 }
