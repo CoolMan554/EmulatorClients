@@ -5,6 +5,11 @@
 
 #define MAX_THREADS_LIMIT 100
 
+/**
+ * @brief The ThreadCollections class
+ * Потокобезопасная коллекция потоков. Сами потоки инициируются только по мере необходимости
+ * Есть некое количество потоков ограниченное Limit
+ */
 class ThreadCollections
 {
     void createThread();

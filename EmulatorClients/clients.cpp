@@ -96,13 +96,16 @@ void Clients::Init()
     reconnectTimer->setSingleShot(true);
     connect(reconnectTimer, &QTimer::timeout, this, &Clients::connectToServer);
     connectToServer();
+
     curTimer = new QTimer();
     curTimer->setSingleShot(false);
     c_period = c_period * 1000 * (0.8 + QRandomGenerator::global()->generateDouble() * 0.4);//Отклонение +- 20%
     curTimer->setInterval(c_period);
+
     connect(tcpSocket, &QTcpSocket::readyRead, this, &Clients::readMessage);
     connect(tcpSocket, &QTcpSocket::disconnected, this, &Clients::reconnecting, Qt::DirectConnection);
     connect(curTimer, &QTimer::timeout, this, &Clients::sendMessage);
+
     curTimer->start();
 }
 
