@@ -13,10 +13,10 @@ bool ConfigCommandLine::parseArguments()
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::translate("main", "TestEmulator"));
     parser.addHelpOption(); parser.addVersionOption();
-    QCommandLineOption addressOption(QStringList() << "a" << "address" , QCoreApplication::translate("main", "Entering the address of the target server (Example: 127.0.0.1)"), "address", "127.0.0.1");
+    QCommandLineOption addressOption(QStringList() << "a" << "address" , QCoreApplication::translate("main", "Entering the address of the target server (Default: 127.0.0.1)"), "address", "127.0.0.1");
     QCommandLineOption portOption(QStringList() << "p" << "port" , QCoreApplication::translate("main", "Entering the port of the target server (Example: 7001)"), "port");
     QCommandLineOption connectOption(QStringList() << "c" << "connect" , QCoreApplication::translate("main", "Number of connected sessions"), "connect", "100");
-    QCommandLineOption periodOption(QStringList() << "per" << "period" , QCoreApplication::translate("main", "Message period"), "period", "1");
+    QCommandLineOption periodOption(QStringList() << "per" << "period" , QCoreApplication::translate("main", "Message period"), "period", "1.0");
     parser.addOption(addressOption);
     parser.addOption(portOption);
     parser.addOption(connectOption);
