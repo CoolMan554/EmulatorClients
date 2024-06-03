@@ -16,8 +16,12 @@ EmulatorClients::~EmulatorClients()
 {
     foreach(auto curClient, curClients)
         curClient->deleteLater();
-    currentTime->stop();
-    delete currentTime;
+    if(currentTime)
+    {
+        currentTime->stop();
+        delete currentTime;
+        currentTime = nullptr;
+    }
 }
 
 void EmulatorClients::createClients(const QString address, const int port, const int countConnection, const double period)

@@ -30,7 +30,7 @@ public:
 private:
     QString c_address;
     int c_port = 0;
-    double c_period = 0;
+    double c_period = 0.0;
     QTcpSocket *tcpSocket{};
     NetworkProtocol *networkProtocol{};///<Протокол предназначен для формирования сообщения
     QTimer *curTimer{};///<Таймер для отправки сообщения серверу
