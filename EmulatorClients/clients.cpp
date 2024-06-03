@@ -76,7 +76,7 @@ void Clients::connectToServer()
         if(tcpSocket->waitForConnected(timeoutServer * 1000))
         {
             totalNumberConnected++;
-            qDebug() << "Connected to Server" << c_address << c_port;
+            qDebug() << "Connected to Server" << c_address << c_port << tcpSocket;
         }
         else
         {
